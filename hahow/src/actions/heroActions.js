@@ -80,16 +80,6 @@ function selectHero(payload) {
     dispatch(selectHeroSuccess({ heroId }))
   }
 }
-function getHeroProfileSuccess(data) {
-  const payload = {
-    heroId: data.heroId,
-    profile: data.profile
-  }
-  return {
-    type: actionTypes.getHeroProfileSuccess,
-    payload
-  }
-}
 
 function getHeroProfile(payload) {
   const {

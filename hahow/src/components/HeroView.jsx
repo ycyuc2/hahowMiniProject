@@ -145,6 +145,7 @@ const HeroView = props => {
           const totalPoint = Object.values(result).reduce((prevValue, nextValue) => prevValue + nextValue)
           setTotalPoint(totalPoint)
         })
+    // eslint-disable-next-line
   }, [props.selectedHero])
 
   // states

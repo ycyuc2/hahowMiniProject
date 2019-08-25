@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components'
-import { useRoutes, A } from 'hookrouter';
+import { useRoutes } from 'hookrouter';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import actionCreators from '../actions';
@@ -49,6 +49,7 @@ const HeroListView = props => {
   useEffect(() => {
     if (props.isInit) return
     props.heroActions.getHeros()
+    // eslint-disable-next-line
   }, [])
   return (
     <HeroListContainer>
