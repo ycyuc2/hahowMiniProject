@@ -103,15 +103,23 @@ const HeroListView = props => {
   return (
     <HeroListContainer>
       <HeroListWrapper>
-        {new Array(4).fill(0).map((v, i) => {
+        {props.ids.map((id, idx) => {
+          const hero = props.herosCache[id]
+          const {
+            id: heroId,
+            image,
+            name
+          } = hero
           return (
             <HeroCardItem
-              key={i}
-              href={`/heros/${i}`}
+              key={heroId}
+              href={`/heros/${heroId}`}
             >
-              <HeroImg />
+              <HeroImg 
+                imgurl={image}
+              />
               <HeroName>
-                aaa
+                {name}
               </HeroName>
             </HeroCardItem>
           )
@@ -124,8 +132,9 @@ const HeroListView = props => {
 
 
 const mapStateToProps = state => {
-
   return {
+    ids: state.heros.ids,
+    herosCache: state.heros.herosCache,
   };
 };
 
