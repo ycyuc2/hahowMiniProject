@@ -1,7 +1,9 @@
 import React from 'react';
 import { useRoutes, useRedirect } from 'hookrouter';
-import HeroListView from './components/HeroListView'
+import { Provider } from 'react-redux'
 import styled from 'styled-components'
+import HeroListView from './components/HeroListView'
+import store from './store/store'
 
 const Container = styled.div`
   min-height: 100vh;
@@ -20,9 +22,11 @@ function App() {
   useRedirect('/', '/heros')
   const routeResult = useRoutes(routes);
   return (
+    <Provider store={store}>
       <Container>
         {routeResult}
       </Container>
+    </Provider>
   )
 }
 

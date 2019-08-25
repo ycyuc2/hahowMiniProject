@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components'
 import { useRoutes, A } from 'hookrouter';
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import actionCreators from '../actions';
 import HeroView from './HeroView'
 
 // routes
@@ -92,6 +95,11 @@ const HeroName = styled.div`
 // view
 const HeroListView = props => {
   const routeResult = useRoutes(routes);
+  // effects
+  useEffect(() => {
+    if (props.isInit) return
+    props.heroActions.getHeros()
+  }, [])
   return (
     <HeroListContainer>
       <HeroListWrapper>
@@ -114,4 +122,20 @@ const HeroListView = props => {
   )
 }
 
-export default HeroListView
+
+const mapStateToProps = state => {
+
+  return {
+  };
+};
+
+const mapActionToProps = dispatch => {
+  return {
+    heroActions: bindActionCreators(actionCreators.heroActionCreators, dispatch)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionToProps
+)(HeroListView)
