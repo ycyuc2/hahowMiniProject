@@ -1,36 +1,11 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components'
-import { useRoutes, A } from 'hookrouter';
+import React from 'react';
+import styled from 'styled-components';
+import { A } from 'hookrouter';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import actionCreators from '../actions';
-import HeroView from './HeroView'
-import HeroCardView from './HeroCardView'
-
-// routes
-const routes = {
-  '/:heroId': ({ heroId }) => <HeroView heroId={heroId} />
-};
 
 // styled
-const HeroListContainer = styled.div`
-  width: 100%;
-  max-width: 1040px;
-  @media screen and (max-width: 1060px){
-    padding: 0 20px
-  }
-`;
-const HeroListWrapper = styled.div`
-  width: 100%;
-  padding: 20px 20px 0 20px;
-  border: 1px solid #0f0;
-  border-radius: 3px;
-  &:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-`;
 const HeroCardItem = styled(({ active, ...props }) => <A {...props} />)`
   display: block;
   text-decoration: none;
@@ -94,39 +69,33 @@ const HeroName = styled.div`
 `;
 
 // view
-const HeroListView = props => {
-  const routeResult = useRoutes(routes);
-  // effects
-  useEffect(() => {
-    if (props.isInit) return
-    props.heroActions.getHeros()
-  }, [])
+const HeroCard = props => {
+  const {
+    hero,
+    selectedHero
+  } = props
+  const {
+    id,
+    name,
+    image
+  } = hero
   return (
-    <HeroListContainer>
-      <HeroListWrapper>
-        {props.ids.map((id, idx) => {
-          const hero = props.herosCache[id]
-          const {
-            id: heroId,
-          } = hero
-          return (
-            <HeroCardView
-              key={heroId}
-              hero={hero}
-            />
-          )
-        })}
-      </HeroListWrapper>
-      {routeResult}
-    </HeroListContainer>
+    <HeroCardItem
+      href={`/heros/${id}`}
+    >
+      <HeroImg
+        imgurl={image}
+      />
+      <HeroName>
+        {name}
+      </HeroName>
+    </HeroCardItem>
   )
 }
 
 
 const mapStateToProps = state => {
   return {
-    ids: state.heros.ids,
-    herosCache: state.heros.herosCache,
   };
 };
 
@@ -139,4 +108,4 @@ const mapActionToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapActionToProps
-)(HeroListView)
+)(HeroCard)

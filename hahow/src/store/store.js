@@ -3,6 +3,10 @@ import thunk from 'redux-thunk';
 import reducerCreator from '../reducers'
 
 const initState = {
+  heros: {
+    herosCache: {},
+    ids: [],
+  }
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
