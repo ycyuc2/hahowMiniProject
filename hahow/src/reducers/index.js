@@ -10,6 +10,9 @@ const reducers = {
   [actionTypes.getHerosSuccess]: function (state, action) {
     return getHerosSuccess(state, action)
   },
+  [actionTypes.selectHeroSuccess]: function (state, action) {
+    return selectHeroSuccess(state, action)
+  },
 }
 
 const getHerosError = (state, action) => {
@@ -59,6 +62,23 @@ const getHerosSuccess = (state, action) => {
     heros: new_heros
   })
 }
+
+const selectHeroSuccess = (state, action) => {
+  const {
+    heroId
+  } = action.payload
+  const {
+    heros
+  } = state
+  const new_heros = Object.assign({}, heros, {
+    selectedHero: heroId
+  })
+
+  return Object.assign({}, state, {
+    heros: new_heros
+  })
+}
+
 
 export default function createReducers(initState) {
   return function reducer(state = initState, action) {

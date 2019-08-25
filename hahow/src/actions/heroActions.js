@@ -62,8 +62,102 @@ const getHeros = payload => {
 
 }
 
+function selectHeroSuccess(data) {
+  const payload = {
+    heroId: data.heroId
+  }
+  return {
+    type: actionTypes.selectHeroSuccess,
+    payload
+  }
+}
+
+function selectHero(payload) {
+  const {
+    heroId
+  } = payload
+  return dispatch => {
+    dispatch(selectHeroSuccess({ heroId }))
+  }
+}
+function getHeroProfileSuccess(data) {
+  const payload = {
+    heroId: data.heroId,
+    profile: data.profile
+  }
+  return {
+    type: actionTypes.getHeroProfileSuccess,
+    payload
+  }
+}
+
+function getHeroProfile(payload) {
+  const {
+    heroId
+  } = payload
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      let url = `http://hahow-recruit.herokuapp.com/heroes/${heroId}/profile`
+      fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: 'GET'
+      })
+        .then(response => {
+          response.json()
+            .then(result => {
+              resolve(result)
+            })
+            .catch(err => {
+              reject(err)
+            })
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
+}
+
+
+function updateHeroProfile(payload) {
+  const {
+    heroProfile,
+    heroId
+  } = payload
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      let url = `https://hahow-recruit.herokuapp.com/heroes/${heroId}/profile`
+      fetch(url, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: 'PATCH',
+        body: JSON.stringify(heroProfile)
+      })
+        .then(response => {
+          response.text()
+            .then(result => {
+              resolve()
+            })
+            .catch(err => {
+              reject()
+            })
+        })
+        .catch(err => {
+          reject()
+        })
+    })
+  }
+}
+
 const herosActions = {
   getHeros,
+  selectHero,
+  getHeroProfile,
+  updateHeroProfile
 }
 
 export default herosActions
