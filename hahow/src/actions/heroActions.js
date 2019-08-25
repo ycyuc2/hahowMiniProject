@@ -122,11 +122,42 @@ function getHeroProfile(payload) {
 }
 
 
+function updateHeroProfile(payload) {
+  const {
+    heroProfile,
+    heroId
+  } = payload
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      let url = `https://hahow-recruit.herokuapp.com/heroes/${heroId}/profile`
+      fetch(url, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: 'PATCH',
+        body: JSON.stringify(heroProfile)
+      })
+        .then(response => {
+          response.text()
+            .then(result => {
+              resolve()
+            })
+            .catch(err => {
+              reject()
+            })
+        })
+        .catch(err => {
+          reject()
+        })
+    })
+  }
+}
 
 const herosActions = {
   getHeros,
   selectHero,
-  getHeroProfile
+  getHeroProfile,
+  updateHeroProfile
 }
 
 export default herosActions

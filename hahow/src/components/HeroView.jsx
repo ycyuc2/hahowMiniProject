@@ -303,9 +303,14 @@ const HeroView = props => {
           POINT: <span>{pointLeft}</span>
         </PointLeft>
         <SaveBtn
+          onClick={() => updateHeroProfile()}
           active={pointLeft === 0}
         >
-          SAVE
+          {isSaving ?
+            'SAVING...'
+            :
+            'SAVE'
+          }
         </SaveBtn>
       </HeroImgAndSaveArea>
     </HeroProfileContainer>
