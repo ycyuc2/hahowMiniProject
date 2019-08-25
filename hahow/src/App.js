@@ -17,6 +17,7 @@ const routes = {
 };
 
 function App() {
+  useRedirect('/', '/heros')
   const routeResult = useRoutes(routes);
   return (
       <Container>
