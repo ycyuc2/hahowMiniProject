@@ -1,26 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useRoutes, useRedirect } from 'hookrouter';
+import HeroListView from './components/HeroListView'
+import styled from 'styled-components'
+
+const Container = styled.div`
+  min-height: 100vh;
+  min-width: 100vw;
+  background-color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const routes = {
+  '/heros*': () => <HeroListView />,
+};
 
 function App() {
+  const routeResult = useRoutes(routes);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+      <Container>
+        {routeResult}
+      </Container>
+  )
 }
 
 export default App;
