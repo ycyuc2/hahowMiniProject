@@ -6,6 +6,10 @@ const initState = {
   heros: {
     herosCache: {},
     ids: [],
+    isLoading: false,
+    isError: false,
+    isInit: false,
+    selectedHero: '',
   }
 }
 

@@ -82,6 +82,8 @@ const HeroCard = props => {
   return (
     <HeroCardItem
       href={`/heros/${id}`}
+      onClick={() => props.heroActions.selectHero({ heroId: id })}
+      active={selectedHero && selectedHero === id}
     >
       <HeroImg
         imgurl={image}
@@ -96,6 +98,7 @@ const HeroCard = props => {
 
 const mapStateToProps = state => {
   return {
+    selectedHero: state.heros.selectedHero,
   };
 };
 

@@ -62,8 +62,29 @@ const getHeros = payload => {
 
 }
 
+function selectHeroSuccess(data) {
+  const payload = {
+    heroId: data.heroId
+  }
+  return {
+    type: actionTypes.selectHeroSuccess,
+    payload
+  }
+}
+
+function selectHero(payload) {
+  const {
+    heroId
+  } = payload
+  return dispatch => {
+    dispatch(selectHeroSuccess({ heroId }))
+  }
+}
+
+
 const herosActions = {
   getHeros,
+  selectHero,
 }
 
 export default herosActions
