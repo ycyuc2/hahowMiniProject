@@ -79,6 +79,7 @@ const selectHeroSuccess = (state, action) => {
   })
 }
 
+
 export default function createReducers(initState) {
   return function reducer(state = initState, action) {
     if (reducers.hasOwnProperty(action.type)) {

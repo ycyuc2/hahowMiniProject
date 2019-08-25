@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState }  from 'react';
 import styled from 'styled-components'
+import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import actionCreators from '../actions';
 
 // react-icons
 import { MdAdd } from "react-icons/md";
@@ -51,20 +54,20 @@ const SaveBtn = styled.div`
   width: 100%;
   height: 50px;
   border-radius: 3px;
-  border: 4px solid #0f0;
+  border: 4px solid ${props => props.active ? '#0f0' : '#999'};
   transition: .2s;
-  cursor: pointer;
+  cursor: ${props => props.active ? 'pointer' : 'not-allowed'};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #0f0;
-  background-color: #333;
+  color: ${props => props.active ? '#0f0' : '#000'};
+  background-color: ${props => props.active ? '#333' : '#ccc'};
   font-size: 24px;
   font-weight: bold;
   user-select: none;
   &:hover {
-    border: 4px solid #fff;
-    background-color: #fff;
+    border: 4px solid ${props => props.active ? '#fff' : '#999'};
+    background-color: ${props => props.active ? '#fff' : '#999'};
     color: #000;
   }
 `;
@@ -89,21 +92,21 @@ const Btn = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 3px;
-  border: 4px solid #0f0;
-  background-color: #333;
+  border: 4px solid ${props => props.disable ? '#999' : '#0f0'};
+  background-color: ${props => props.disable ? '#ccc' : '#333'};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #0f0;
+  color: ${props => props.disable ? '#000' : '#0f0'};;
   margin-right: 10px;
   transition: .2s;
-  cursor: pointer;
+  cursor: ${props => props.disable ? 'not-allowed' : 'pointer'};
   svg {
     font-size: 20px;
   }
   &:hover {
-    border: 4px solid #999;
-    background-color: #999;
+    border: 4px solid ${props => props.disable ? '#999' : '#fff'};
+    background-color: ${props => props.disable ? '#999' : '#fff'};
     color: #000;
   }
   &:last-child {
@@ -131,6 +134,66 @@ const StatusBarContainer = styled.div`
 
 
 const HeroView = props => {
+  // effects
+  useEffect(() => {
+    props.selectedHero &&
+      props.heroActions.getHeroProfile({
+        heroId: props.selectedHero
+      })
+        .then(result => {
+          setHeroProfile(result)
+          const totalPoint = Object.values(result).reduce((prevValue, nextValue) => prevValue + nextValue)
+          setTotalPoint(totalPoint)
+        })
+  }, [props.selectedHero])
+
+  // states
+  const [heroProfileState, setHeroProfile] = useState({})
+
+  const [pointLeft, setPointLeft] = useState(0)
+
+  const [totalPoint, setTotalPoint] = useState(0)
+
+  const [isSaving, setSaving] = useState(false)
+
+  // functions
+  function handleProfileChange(type, fieldName) {
+    let new_heroProfile = Object.assign({}, heroProfileState)
+    const pointGap = type === 'minus' ? 1 : -1
+    const new_pointLeft = pointLeft + pointGap
+    const new_point = new_heroProfile[fieldName] - pointGap
+
+    if (new_pointLeft > totalPoint || new_pointLeft < 0 || new_point < 0) return
+
+    new_heroProfile = Object.assign({}, new_heroProfile, {
+      [fieldName]: new_point
+    })
+    setPointLeft(new_pointLeft)
+    setHeroProfile(new_heroProfile)
+  }
+
+  function updateHeroProfile() {
+    if (pointLeft !== 0) return
+    setSaving(true)
+    props.heroActions.updateHeroProfile({
+      heroId: props.selectedHero,
+      heroProfile: heroProfileState
+    }).then(
+      // 無論如何都要改變 saving 狀態
+      result => setSaving(false),
+      err => setSaving(false)
+    )
+  }
+
+  const hero = props.herosCache[props.selectedHero]
+  if (!hero) return null
+  
+  const {
+    str,
+    int,
+    agi,
+    luk
+  } = heroProfileState
   return (
     <HeroProfileContainer>
       <HeroStatusArea>
@@ -140,16 +203,22 @@ const HeroView = props => {
           >
             STR
           </StatusName>
-          <Btn>
+          <Btn
+            onClick={() => handleProfileChange('minus', 'str')}
+            disable={str === 0}
+          >
             <MdRemove />
           </Btn>
           <StatusBarContainer
             color="#f00"
-            statusPercentage={50}
+            statusPercentage={totalPoint ? (str / totalPoint) * 100 : 0}
           >
             <StatusBar />
           </StatusBarContainer>
-          <Btn>
+          <Btn
+            onClick={() => handleProfileChange('add', 'str')}
+            disable={str === totalPoint || pointLeft === 0}
+          >
             <MdAdd />
           </Btn>
         </HeroStatusRow>
@@ -159,16 +228,22 @@ const HeroView = props => {
           >
             INT
           </StatusName>
-          <Btn>
+          <Btn
+            onClick={() => handleProfileChange('minus', 'int')}
+            disable={int === 0}
+          >
             <MdRemove />
           </Btn>
           <StatusBarContainer
             color="#09f"
-            statusPercentage={50}
+            statusPercentage={totalPoint ? (int / totalPoint) * 100 : 0}
           >
             <StatusBar />
           </StatusBarContainer>
-          <Btn>
+          <Btn
+            onClick={() => handleProfileChange('add', 'int')}
+            disable={int === totalPoint || pointLeft === 0}
+          >
             <MdAdd />
           </Btn>
         </HeroStatusRow>
@@ -178,16 +253,22 @@ const HeroView = props => {
           >
             AGI
           </StatusName>
-          <Btn>
+          <Btn
+            onClick={() => handleProfileChange('minus', 'agi')}
+            disable={agi === 0}
+          >
             <MdRemove />
           </Btn>
           <StatusBarContainer
             color="#0f0"
-            statusPercentage={50}
+            statusPercentage={totalPoint ? (agi / totalPoint) * 100 : 0}
           >
             <StatusBar />
           </StatusBarContainer>
-          <Btn>
+          <Btn
+            onClick={() => handleProfileChange('add', 'agi')}
+            disable={agi === totalPoint || pointLeft === 0}
+          >
             <MdAdd />
           </Btn>
         </HeroStatusRow>
@@ -197,25 +278,33 @@ const HeroView = props => {
           >
             LUK
           </StatusName>
-          <Btn>
+          <Btn
+            onClick={() => handleProfileChange('minus', 'luk')}
+            disable={luk === 0}
+          >
             <MdRemove />
           </Btn>
           <StatusBarContainer
             color="#ff0"
-            statusPercentage={50}
+            statusPercentage={totalPoint ? (luk / totalPoint) * 100 : 0}
           >
             <StatusBar />
           </StatusBarContainer>
-          <Btn>
+          <Btn
+            onClick={() => handleProfileChange('add', 'luk')}
+            disable={luk === totalPoint || pointLeft === 0}
+          >
             <MdAdd />
           </Btn>
         </HeroStatusRow>
       </HeroStatusArea>
       <HeroImgAndSaveArea>
         <PointLeft>
-          POINT: <span>10</span>
+          POINT: <span>{pointLeft}</span>
         </PointLeft>
-        <SaveBtn>
+        <SaveBtn
+          active={pointLeft === 0}
+        >
           SAVE
         </SaveBtn>
       </HeroImgAndSaveArea>
@@ -223,5 +312,20 @@ const HeroView = props => {
   )
 }
 
+const mapStateToProps = state => {
+  return {
+    herosCache: state.heros.herosCache,
+    selectedHero: state.heros.selectedHero,
+  };
+};
 
-export default HeroView
+const mapActionToProps = dispatch => {
+  return {
+    heroActions: bindActionCreators(actionCreators.heroActionCreators, dispatch)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionToProps
+)(HeroView)
