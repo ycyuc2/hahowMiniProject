@@ -7,6 +7,7 @@
 
 ## 專案的架構，web 的架構邏輯
 資料夾結構如下
+```
 .
 |____.DS_Store
 |____index.js
@@ -26,7 +27,7 @@
 |____App.js
 |____store
 | |____store.js
-
+```
 ## 所有使用到的第三方 library
 1. React
     業界非常常見的 javascript UI library，特殊的 jsx 語法，讓我們就像在 javascript 中撰寫 HTML。其中的 virtual Dom 能夠在資料改變的時候與上一次的 vurtual DOM 做對比，並且僅將需要變化的部分更新，以節省繪製時的效能。
