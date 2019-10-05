@@ -63,7 +63,7 @@ const HeroListView = props => {
         }
         {props.isError ?
           <StatusWrapper>
-            An error occurred, please try again.
+            An error occurred, please try again.我在 test 做ㄌ這件事
           </StatusWrapper>
           :
           null
