@@ -56,7 +56,7 @@ const HeroListView = props => {
       <HeroListWrapper>
         {props.isLoading ?
           <StatusWrapper>
-            Loading...我在 develope 分支做ㄌ一件事
+            Loading...develop 更新
           </StatusWrapper>
           :
           null
